@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# This script use Nuitka to compile the python program, read more about Nuitka in this links:
+
+# https://nuitka.net/
+# https://pypi.org/project/Nuitka/
+
+python3 -m pip install Nuitka
+python3 -m nuitka totp-fun --follow-imports

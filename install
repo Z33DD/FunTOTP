@@ -1,0 +1,36 @@
+#!/bin/bash
+
+echo -e "[!] Please enter the default keystore path (default: '~/Documents/defaultks.funtotp'): "
+read KEYSTORE_PATH
+
+if [[ KEYSTORE_PATH = ""]]
+then
+    KEYSTORE_PATH = "/home/$USER/Documents/defaultks.funtotp"
+fi
+
+echo "[i] Setting default parameters"
+sed -i 's/defaultks.funtotp/$KEYSTORE_PATH/g' funtotp
+
+
+version=$(python -V 2>&1 | grep -Po '(?<=Python )(.+)')
+
+if [[ -z "$version" ]]
+then
+    echo "[Err] No Python! Install then and try again." 
+    exit -1
+fi
+
+echo "[i] Installing Nukita..."
+python3 -m pip install Nuitka
+echo "[i] Compiling.."
+python3 -m nuitka totpfun --follow-imports 
+
+chmod 744 ./funtotp.bin
+
+echo "[i] Moving './funtotp.bin' to '~/.local/bin/funtotp'"
+mv ./funtotp.bin ~/.local/bin/funtotp
+
+echo "[i] All done!"
+echo "Try:"
+echo "      $ funtotp"
+echo ""

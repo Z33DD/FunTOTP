@@ -1,0 +1,89 @@
+#!/usr/bin/python3
+
+import os
+import sys
+import argparse
+import mintotp
+
+from FunTOTP.interface import interface
+from FunTOTP.keystore import keystore
+
+# Change this for choose the default keystore, for example:
+#DEFAULT_KEYSTORE ='~/Documents/keystore.funtotp'
+
+DEFAULT_KEYSTORE = 'defaultks.funtotp'
+
+def main():
+    t = interface()
+
+    parser = argparse.ArgumentParser(prog='FunTOTP',
+                                     description='TOTP encrypted keychain',
+                                     epilog='Make by Z33DD with love',
+                                     allow_abbrev=False,
+                                     )
+
+    parser.add_argument('--version', '-v', action='version')
+    parser.add_argument('--secret', type=str, help="Add a new TOTP Key")
+    parser.add_argument('--keystore', '-k', type=str,
+                        help='Set the keystore file')
+    parser.add_argument('--erase', '-e', action="store_true",
+                        help="This will DELETE ALL KEYS, are you sure?")
+    parser.add_argument('--newkey', action="store_true",
+                        help="Interactive guide to give you a help")
+    parser.add_argument('--remove', type=str,
+                        help="Remove a key by title")    
+    parser.add_argument('--printkeys', action='store_true',
+                        help='Print the TOTPs')
+
+    args = parser.parse_args()
+
+
+    if not len(sys.argv) > 1:
+        k = keystore(DEFAULT_KEYSTORE)
+        for a,b in k.keys().items():
+            t.info("{}      {}".format(a, mintotp.totp(b)))
+        exit(0)
+
+    if args.keystore:
+        file = str(args.keystore)
+    else:
+        file = DEFAULT_KEYSTORE
+
+
+    if args.erase:
+        if os.path.isfile(file):
+            t.warning("THIS WILL DELETE ALL TOTP KEYS !!!")
+            t.sure()
+
+            os.remove(file)
+            exit(0)
+        else:
+            t.log("No keystore found")
+            exit(-1)
+
+    k = keystore(file)
+
+    if args.secret:
+        k.add(args.secret)
+        exit(0)
+
+    elif args.printkeys:
+        for a,b in k.keys().items():
+            t.info("{}      {}".format(a, mintotp.totp(b)))
+        exit(0)
+    
+    elif args.newkey:
+        t.log("Crating a new key!")
+        title = input("[?] Title (blank for none):\t")
+        secret = input("[?] Secret:\t")
+        k.add(secret,title)
+        exit(0)
+    
+    elif args.remove:
+        t.info(k.remove(args.remove))
+        exit(0)
+
+    
+
+if __name__ == '__main__':
+    main()
