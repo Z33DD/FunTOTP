@@ -6,7 +6,8 @@ With this, you can use 2FA with any account. It's simple code and you secrets wi
 **NOTE:** This repository is considered good for beginners, especially in Python. The only previous knowledge to modify and contribute with this code is the basics of Object Oriented Programming (OOP) and its implementation in Python.
 
 ```
-THIS IS VULNERABLE TO SIDE-CHANNEL ATTACKS AND ANY PERSON WITH PHYSICAL ACCESS TO YOUR COMPUTER WHILE THE PROGRAM IT'S RUNNING CAN GET THE KEYS
+THIS IS VULNERABLE TO SIDE-CHANNEL ATTACKS AND ANY PERSON WITH PHYSICAL ACCESS
+TO YOUR COMPUTERWHILE THE PROGRAM IS RUNNING CAN GET THE KEYS
 ```
 
 ## Built With
